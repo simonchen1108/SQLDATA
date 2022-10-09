@@ -1,0 +1,123 @@
+USE simon;
+
+CREATE TABLE users(
+    id INT AUTO_INCREMENT PRIMARY Key,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+--CREATE USERS TABLE
+
+INSERT INTO users (username) VALUES
+('Bluecat'),
+('Simonboy'),
+('MonkeyDiane');
+
+SELECT * FROM users;
+
+DROP TABLE PHOTO;
+
+--CREATE PHOTO TABLES
+
+CREATE TABLE PHOTO(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    image_URL VARCHAR(400) NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (user_id)  REFERENCES users(id)
+);
+
+--CREATE PHOTO DATA 
+
+
+INSERT INTO PHOTO (image_URL,user_id) VALUES
+('/996b',1),
+('/884b4',2),
+('/876b9',3);
+
+--JOIN TABLE Between USERS AND PHOTO
+
+SELECT users.username, PHOTO.image_URL
+FROM PHOTO
+JOIN users
+    ON PHOTO.user_id = users.id;
+
+DESCRIBE PHOTO;
+
+
+--CRREATE COMMENTS TABLE
+
+
+
+CREATE TABLE comments(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    comment_text VARCHAR (4000) NOT NULL,
+    user_id INT NOT NULL,
+    photo_id INT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (photo_id) REFERENCES PHOTO(user_id)
+
+);
+
+
+--INSERT VALUES FOR COMMENTS TABLE
+
+
+SELECT * FROM comments;
+
+INSERT INTO comments (comment_text, user_id, photo_id) VALUES
+('This is a very beautiful photo', 2, 2),
+('What a beautiful photo', 3, 1),
+('Wow!!!', 2, 1);
+
+
+SELECT * FROM users;
+
+--CREATE 'LIKES' TABLES
+
+
+
+CREATE TABLE likes(
+    user_id INT NOT NULL,
+    photo_id INT NOT NULL,
+    CREATE_AT TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(photo_id) REFERENCES PHOTO(id),
+    PRIMARY KEY(user_id, photo_id)
+
+);
+
+--INSERT DATA VALUE INTO 'Like' TABLE
+
+INSERT INTO likes (user_id,photo_id) VALUES
+(1,2),
+(2,1),
+(3,1),
+(1,3);
+
+INSERT INTO likes (user_id,photo_id) VALUES
+(3,2),
+(2,2);
+
+SELECT * FROM likes;
+
+--CREATE TABLE FOR FOLLOWERS AND FOLLOWEE RELATIONSHIPS
+
+CREATE TABLE follows(
+    follower_id INT NOT NULL,
+    followee_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (follower_id) REFERENCES users(id),
+    FOREIGN KEY (followee_id) REFERENCES users(id),
+    PRIMARY KEY(follower_id, followee_id)
+
+
+);
+
+DESCRIBE follows;
+
+INSERT INTO follows (follower_id,followee_id) VALUES
+(3,2),
+(1,2),
+(2,1);
